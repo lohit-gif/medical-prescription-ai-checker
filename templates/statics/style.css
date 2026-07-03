@@ -1,0 +1,25 @@
+
+
+body{
+
+background:#f0f8ff;
+
+font-family:Arial;
+
+}
+
+
+.card{
+
+border-radius:20px;
+
+}
+
+
+button{
+
+border-radius:10px !important;
+
+font-size:18px;
+
+}

@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-Mail
+Pillow
+PyPDF2
+google-genai
+Werkzeug
+gunicorn
+python-dotenv
