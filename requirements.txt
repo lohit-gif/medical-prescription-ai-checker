@@ -1,9 +1,7 @@
-Flask
-Flask-SQLAlchemy
-Flask-Mail
+Django
+gunicorn
+whitenoise
 Pillow
 PyPDF2
 google-genai
-Werkzeug
-gunicorn
 python-dotenv

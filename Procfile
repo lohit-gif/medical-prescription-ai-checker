@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn medical_project.wsgi:application

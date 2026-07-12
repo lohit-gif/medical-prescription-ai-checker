@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Medical AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            min-height: 100vh;
+        }
+        /* Top Navigation */
+        .navbar-custom {
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: 15px 30px;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: #064e3b !important;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar-brand i { color: #10b981; }
+        .btn-outline-danger { border-radius: 10px; font-weight: 500; border: 1px solid #ef4444; color: #ef4444; }
+        .btn-outline-danger:hover { background: #ef4444; color: white; }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-section::after {
+            content: '\f481';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -20px;
+            bottom: -50px;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+        
+        /* Stats/Info Cards */
+        .info-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Upload Area */
+        .upload-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+        .upload-card:hover, .upload-card.dragover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        .upload-icon { font-size: 48px; color: #10b981; margin-bottom: 15px; }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3); color: white;}
+
+        /* Results Area */
+        .result-section { margin-top: 40px; }
+        .result-box {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 30px;
+        }
+        .result-header {
+            background: #f8fafc;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-header i { color: #10b981; }
+        .result-body {
+            padding: 24px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #475569;
+        }
+        pre { font-family: 'Outfit', sans-serif; white-space: pre-wrap; word-wrap: break-word; margin: 0; }
+
+        /* History Table */
+        .history-card { background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 24px; }
+        .table { margin-bottom: 0; }
+        .table th { border-top: none; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .table td { vertical-align: middle; color: #334155; border-bottom: 1px solid #f1f5f9; padding: 16px 10px; }
+        .btn-sm-action { background: #f0fdf4; color: #10b981; border: none; border-radius: 8px; padding: 8px 12px; font-weight: 500; font-size: 0.85rem; transition: 0.2s; text-decoration: none; display: inline-block;}
+        .btn-sm-action:hover { background: #10b981; color: white; }
+
+        /* Loader */
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; backdrop-filter: blur(5px); }
+        .loader-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .spinner-grow { color: #10b981; width: 3rem; height: 3rem; }
+        .loader-text { margin-top: 20px; font-weight: 600; color: #064e3b; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom">
+    <div class="container-fluid px-md-5">
+        <span class="navbar-brand"><i class="fa-solid fa-leaf"></i> Medical AI Checker</span>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-power-off me-2"></i>Sign Out</a>
+    </div>
+</nav>
+
+<div class="container py-5">
+    
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1 style="font-weight: 700; font-size: 2.5rem; margin-bottom: 10px;">Welcome back, {{ request.user.username }}</h1>
+        <p style="font-size: 1.1rem; opacity: 0.9; margin: 0; max-width: 600px;">Upload hand-written prescriptions to instantly digitize and analyze them with advanced AI algorithms.</p>
+    </div>
+
+    <!-- Quick Info -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div><h5 class="mb-1 fw-bold">Supported Formats</h5><p class="mb-0 text-muted" style="font-size: 0.85rem;">PDF, JPG, PNG files</p></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-icon"><i class="fa-solid fa-brain"></i></div>
+                <div><h5 class="mb-1 fw-bold">AI Powered</h5><p class="mb-0 text-muted" style="font-size: 0.85rem;">Gemini 2.5 Flash Vision</p></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div><h5 class="mb-1 fw-bold">Secure Storage</h5><p class="mb-0 text-muted" style="font-size: 0.85rem;">Encrypted & Private</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+                {% csrf_token %}
+                <div class="upload-card">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <h4 class="fw-bold text-dark mb-2">Drag & Drop Prescription</h4>
+                    <p class="text-muted mb-4">or click the button below to browse your files</p>
+                    <div class="file-input-wrapper">
+                        <button class="btn btn-outline-secondary px-4 py-2" type="button" style="border-radius: 10px;">Browse Files</button>
+                        <input type="file" name="prescription" accept=".jpg,.jpeg,.png,.pdf" required onchange="document.getElementById('fileName').innerText = this.files[0].name">
+                    </div>
+                    <div id="fileName" class="mt-3 fw-medium text-success" style="font-size: 0.9rem;"></div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-brand px-5"><i class="fa-solid fa-wand-magic-sparkles me-2"></i> Analyze Prescription</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    {% if clean_prescription or ai_analysis %}
+    <div class="result-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-dark m-0">Analysis Complete</h3>
+            {% if history %}
+            <a href="{% url 'download_pdf' history.0.id %}" class="btn btn-brand"><i class="fa-solid fa-download me-2"></i> Export PDF</a>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="result-box h-100">
+                    <div class="result-header"><i class="fa-solid fa-file-lines"></i> Digitized Prescription</div>
+                    <div class="result-body bg-light">
+                        <pre>{{ clean_prescription }}</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="result-box h-100">
+                    <div class="result-header"><i class="fa-solid fa-stethoscope"></i> AI Medical Insights</div>
+                    <div class="result-body" style="background: #f0fdf4;">
+                        <pre>{{ ai_analysis }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- History Table -->
+    {% if history %}
+    <div class="history-card mt-5 shadow-sm">
+        <h4 class="fw-bold text-dark mb-4"><i class="fa-solid fa-clock-rotate-left me-2 text-success"></i> Recent Analyses</h4>
+        <div class="table-responsive">
+            <table class="table table-hover border-light">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>File Name</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in history %}
+                    <tr>
+                        <td class="fw-medium">{{ record.created_at|date:"M d, Y" }} <span class="text-muted ms-2" style="font-size: 0.85rem;">{{ record.created_at|date:"H:i" }}</span></td>
+                        <td><i class="fa-regular fa-file-image me-2 text-muted"></i>{{ record.file_upload.name|cut:'prescriptions/' }}</td>
+                        <td><span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3">Completed</span></td>
+                        <td class="text-end">
+                            <a href="{% url 'download_pdf' record.id %}" class="btn-sm-action"><i class="fa-solid fa-cloud-arrow-down me-1"></i> PDF</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Loader -->
+<div id="loadingScreen" class="loading-overlay">
+    <div class="loader-content">
+        <div class="spinner-grow" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="loader-text">Analyzing your prescription...</div>
+        <p class="text-muted mt-2" style="font-size: 0.9rem;">Applying OCR and AI reasoning</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showLoading() {
+        document.getElementById("loadingScreen").style.display = "block";
+    }
+</script>
+</body>
+</html>
