@@ -24,8 +24,8 @@ class OTPRecord(models.Model):
 class PrescriptionAnalysis(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='analyses')
     file_upload = models.FileField(upload_to='prescriptions/')
-    clean_prescription = models.TextField()
-    ai_analysis = models.TextField()
+    clean_prescription = models.TextField(blank=True, default='')
+    ai_analysis = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
